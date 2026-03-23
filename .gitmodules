@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/kokoruza/TripPlanner.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/kokoruza/trip-planner-front.git
