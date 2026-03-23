@@ -14,7 +14,7 @@ COPY backend/Shared/Shared.csproj                                           back
 RUN dotnet restore backend/TripPlanner.sln
 
 # Копируем весь исходный код
-COPY backend/ TripPlanner/
+COPY backend/TripPlanner/
 
 # Publish
 RUN dotnet publish backend/TripPlanner/TripPlanner.API.csproj -c Release -o /app/publish
