@@ -1,34 +1,29 @@
-# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Копируем solution и csproj для кеширования restore
-COPY backend/TripPlanner.sln                                                backend/
-COPY backend/TripPlanner/TripPlanner.API.csproj                             backend/TripPlanner/
-COPY backend/TripPlanner.Application/TripPlanner.Application.csproj         backend/TripPlanner.Application/
-COPY backend/TripPlanner.Domain/TripPlanner.Domain.csproj                   backend/TripPlanner.Domain/
-COPY backend/TripPlanner.Infrastructure/TripPlanner.Infrastructure.csproj   backend/TripPlanner.Infrastructure/
-COPY backend/Shared/Shared.csproj                                           backend/Shared/
+# копируем только csproj сначала (кэш)
+COPY backend/TripPlanner.sln ./backend/
+COPY backend/TripPlanner/TripPlanner.API.csproj ./backend/TripPlanner/
+COPY backend/TripPlanner.Application/TripPlanner.Application.csproj ./backend/TripPlanner.Application/
+COPY backend/TripPlanner.Domain/TripPlanner.Domain.csproj ./backend/TripPlanner.Domain/
+COPY backend/TripPlanner.Infrastructure/TripPlanner.Infrastructure.csproj ./backend/TripPlanner.Infrastructure/
+COPY backend/Shared/Shared.csproj ./backend/Shared/
 
-# Restore
 RUN dotnet restore backend/TripPlanner.sln
 
-# Копируем весь исходный код
-COPY backend/ TripPlanner/
+# копируем всё
+COPY backend/ ./backend/
 
-# Publish
-RUN dotnet publish backend/ TripPlanner/TripPlanner.API.csproj -c Release -o /app/publish
+# билд
+RUN dotnet publish backend/TripPlanner/TripPlanner.API.csproj -c Release -o /app/publish
 
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+# runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
 COPY --from=build /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:5000
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV DOTNET_RUNNING_IN_CONTAINER=true
-
 EXPOSE 5000
 
 CMD ["dotnet", "TripPlanner.API.dll"]
