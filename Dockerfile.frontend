@@ -2,10 +2,10 @@
 FROM node:18-alpine AS build
 WORKDIR /app
 
-COPY trip-planner-front/package*.json ./
+COPY frontend/package*.json ./
 RUN npm ci
 
-COPY trip-planner-front/ .
+COPY frontend/ .
 RUN npm run build
 
 # Production stage

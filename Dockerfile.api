@@ -3,21 +3,21 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Копируем solution и csproj для кеширования restore
-COPY TripPlanner/TripPlanner.sln                                                TripPlanner/
-COPY TripPlanner/TripPlanner/TripPlanner.API.csproj                             TripPlanner/TripPlanner/
-COPY TripPlanner/TripPlanner.Application/TripPlanner.Application.csproj         TripPlanner/TripPlanner.Application/
-COPY TripPlanner/TripPlanner.Domain/TripPlanner.Domain.csproj                   TripPlanner/TripPlanner.Domain/
-COPY TripPlanner/TripPlanner.Infrastructure/TripPlanner.Infrastructure.csproj   TripPlanner/TripPlanner.Infrastructure/
-COPY TripPlanner/Shared/Shared.csproj                                           TripPlanner/Shared/
+COPY backend/TripPlanner.sln                                                backend/
+COPY backend/TripPlanner/TripPlanner.API.csproj                             backend/TripPlanner/
+COPY backend/TripPlanner.Application/TripPlanner.Application.csproj         backend/TripPlanner.Application/
+COPY backend/TripPlanner.Domain/TripPlanner.Domain.csproj                   backend/TripPlanner.Domain/
+COPY backend/TripPlanner.Infrastructure/TripPlanner.Infrastructure.csproj   backend/TripPlanner.Infrastructure/
+COPY backend/Shared/Shared.csproj                                           backend/Shared/
 
 # Restore
-RUN dotnet restore TripPlanner/TripPlanner.sln
+RUN dotnet restore backend/TripPlanner.sln
 
 # Копируем весь исходный код
-COPY TripPlanner/ TripPlanner/
+COPY backend/ TripPlanner/
 
 # Publish
-RUN dotnet publish TripPlanner/TripPlanner/TripPlanner.API.csproj -c Release -o /app/publish
+RUN dotnet publish backend/TripPlanner/TripPlanner.API.csproj -c Release -o /app/publish
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
