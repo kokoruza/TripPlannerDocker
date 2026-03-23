@@ -4,7 +4,19 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 
-
+/*/*/bin/
+/*/bin/
+*/bin/
+/*/obj/
+/*/.vs/
+/*/*/obj/
+*/obj/
+*/.vs/
+/*/*/wwwroot/
+/*/wwwroot/
+/*/*/publish/
+*/_docs/
+_docs
 .vs
 
 /*/logs
